@@ -1,0 +1,47 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GloomChars.Api", "GloomChars.Api\GloomChars.Api.csproj", "{6FC7ED9A-4ABB-4EC1-A21A-21241242F4DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GloomChars.Authentication", "GloomChars.Authentication\GloomChars.Authentication.csproj", "{EE81B65F-D7CA-4C4F-A6E0-788B13567EA5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GloomChars.GameData", "GloomChars.GameData\GloomChars.GameData.csproj", "{D8A2CE30-C483-4334-A9A2-A6ABAE4C3850}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GloomChars.Characters", "GloomChars.Characters\GloomChars.Characters.csproj", "{CFB9D99F-B673-4199-AAEF-FCCCB704176F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GloomChars.Common", "GloomChars.Common\GloomChars.Common.csproj", "{DB251EFD-8001-49E0-BBB9-1C40EEFCFCE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GloomChars.Tests", "GloomChars.Tests\GloomChars.Tests.csproj", "{F7E67155-9AAE-4F02-9329-BD17A68029D4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6FC7ED9A-4ABB-4EC1-A21A-21241242F4DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FC7ED9A-4ABB-4EC1-A21A-21241242F4DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FC7ED9A-4ABB-4EC1-A21A-21241242F4DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FC7ED9A-4ABB-4EC1-A21A-21241242F4DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE81B65F-D7CA-4C4F-A6E0-788B13567EA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE81B65F-D7CA-4C4F-A6E0-788B13567EA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE81B65F-D7CA-4C4F-A6E0-788B13567EA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE81B65F-D7CA-4C4F-A6E0-788B13567EA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8A2CE30-C483-4334-A9A2-A6ABAE4C3850}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8A2CE30-C483-4334-A9A2-A6ABAE4C3850}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8A2CE30-C483-4334-A9A2-A6ABAE4C3850}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8A2CE30-C483-4334-A9A2-A6ABAE4C3850}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFB9D99F-B673-4199-AAEF-FCCCB704176F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFB9D99F-B673-4199-AAEF-FCCCB704176F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFB9D99F-B673-4199-AAEF-FCCCB704176F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFB9D99F-B673-4199-AAEF-FCCCB704176F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB251EFD-8001-49E0-BBB9-1C40EEFCFCE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB251EFD-8001-49E0-BBB9-1C40EEFCFCE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB251EFD-8001-49E0-BBB9-1C40EEFCFCE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB251EFD-8001-49E0-BBB9-1C40EEFCFCE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7E67155-9AAE-4F02-9329-BD17A68029D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7E67155-9AAE-4F02-9329-BD17A68029D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7E67155-9AAE-4F02-9329-BD17A68029D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7E67155-9AAE-4F02-9329-BD17A68029D4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
