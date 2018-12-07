@@ -36,7 +36,7 @@ namespace GloomChars.Api.Characters
                 from gloomClass in GetGloomClass(newCharacter.ClassName)
                 from newChar    in ToNewCharacter(user.Id, newCharacter.Name, gloomClass.ClassName)
                 from addResult  in AddCharacter(newChar)
-                from character    in GetCharacter(addResult, user.Id)
+                from character  in GetCharacter(addResult, user.Id)
                 select character;
 
             return result
