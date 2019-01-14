@@ -52,6 +52,25 @@ namespace GloomChars.Authentication.Repositories
             return DapperUtils.SingleQuery<PreAuthUser>(_connStr, sql, new { Email = email });
         }
 
+        public Option<PreAuthUser> GetUserByToken(string accessToken)
+        {
+            string sql = @"
+                SELECT users.id                AS Id,
+                    users.email                AS Email, 
+                    users.password_hash        AS PasswordHash, 
+                    users.is_locked_out        AS IsLockedOut, 
+                    users.login_attempt_number AS LoginAttemptNumber, 
+                    users.date_created         AS DateCreated, 
+                    users.date_updated         AS DateUpdated,
+                    users.date_locked_out      AS DateLockedOut
+                INNER JOIN auth_tokens 
+                    ON users.id = auth_tokens.user_id
+                WHERE auth_tokens.access_token = @access_token
+                ";
+
+            return DapperUtils.SingleQuery<PreAuthUser>(_connStr, sql, new { AccessToken = accessToken });
+        }
+
         public Either<NewLogin, string> InsertNewLogin(NewLogin newLogin)
         {
             string sql = @"
@@ -97,6 +116,18 @@ namespace GloomChars.Authentication.Repositories
                 ";
 
             DapperUtils.Execute(_connStr, sql, statusUpdate);
+        }
+
+        public int UpdatePassword(int userId, string passwordHash)
+        {
+            string sql = @"
+                UPDATE users
+                SET password_hash = @PasswordHash,
+                    date_updated = current_timestamp
+                WHERE id = @Id
+                ";
+
+            return DapperUtils.Execute(_connStr, sql, new { Id = userId, PasswordHash = passwordHash });
         }
     }
 }

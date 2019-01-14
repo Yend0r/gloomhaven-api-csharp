@@ -9,5 +9,6 @@ namespace GloomChars.Authentication.Interfaces
         Either<AuthenticatedUser, string> Authenticate(string email, string password);
         Either<AuthenticatedUser, string> GetAuthenticatedUser(string accessToken);
         int RevokeToken(string accessToken);
+        Either<int, string> ChangePassword(PasswordUpdate passwordUpdate);
     }
 }

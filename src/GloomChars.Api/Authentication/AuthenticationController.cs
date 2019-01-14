@@ -40,5 +40,25 @@ namespace GloomChars.Api.Authentication
                    .Map(u => _authSvc.RevokeToken(u.AccessToken))
                    .Unify(_ => NoContent(), e => e.ToActionResult());
         }
+
+        [HttpPost("password")]
+        [Authorize]
+        public ActionResult ChangePassword(ChangePasswordRequest pwdRequest)
+        {
+            return _userManager.GetCurrentUser(this.User)
+                   .Map(u => ToPasswordUpdate(u.AccessToken, pwdRequest))
+                   .Map(p => _authSvc.ChangePassword(p))
+                   .Unify(_ => NoContent(), e => e.ToActionResult());
+        }
+
+        private PasswordUpdate ToPasswordUpdate(string accessToken, ChangePasswordRequest pwdRequest)
+        {
+            return new PasswordUpdate
+            {
+                AccessToken = accessToken,
+                OldPassword = pwdRequest.OldPassword,
+                NewPassword = pwdRequest.NewPassword
+            };    
+        }
     }
 }

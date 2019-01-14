@@ -38,8 +38,8 @@ namespace GloomChars.Api
             services.Configure<DatabaseConfig>(Configuration.GetSection("Database"));
             services.Configure<AuthConfig>(Configuration.GetSection("Authentication"));
             
+            //Should probably put these elsewhere if this list gets too big
             services.AddTransient<IUserManager, UserManager>();
-
             services.AddTransient<IAuthRepository, AuthRepository>();
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IGameDataService, GameDataService>();

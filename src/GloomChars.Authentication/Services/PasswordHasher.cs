@@ -9,11 +9,19 @@ namespace GloomChars.Authentication.Services
 
     public class PasswordHasher
     {
-        public static Either<string, AuthenticationError> HashPassword(string email, string password)
+        public static Either<string, string> HashPassword(string email, string password)
         {
-            var userForHasher = new PasswordHashUser(email);
-            var hasher = new Microsoft.AspNetCore.Identity.PasswordHasher<PasswordHashUser>();
-            return hasher.HashPassword(userForHasher, password);
+            try
+            {
+                var userForHasher = new PasswordHashUser(email);
+                var hasher = new Microsoft.AspNetCore.Identity.PasswordHasher<PasswordHashUser>();
+                var hash = hasher.HashPassword(userForHasher, password);
+                return Either<string, string>.CreateSuccess(hash);
+            }
+            catch (Exception)
+            {
+                return Either<string, string>.CreateError("Error hashing password");
+            }
         }
 
         public static bool VerifyHashedPassword(string email, string hashedPassword, string plainPassword)

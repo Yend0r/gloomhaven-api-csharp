@@ -33,5 +33,6 @@
   <ItemGroup>
     <Compile Remove="DatabaseConfig.cs" />
     <Compile Remove="EitherExtensions.cs" />
+    <Compile Remove="Controllers\ValuesController.cs" />
   </ItemGroup>
 </Project>

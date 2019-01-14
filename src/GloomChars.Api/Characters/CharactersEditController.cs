@@ -32,11 +32,11 @@ namespace GloomChars.Api.Characters
         public IActionResult AddCharacter(NewCharacterRequest newCharacter)
         {
             var result =
-                from user       in _userManager.GetCurrentUser(this.User)  
-                from gloomClass in GetGloomClass(newCharacter.ClassName)
-                from newChar    in ToNewCharacter(user.Id, newCharacter.Name, gloomClass.ClassName)
-                from addResult  in AddCharacter(newChar)
-                from character  in GetCharacter(addResult, user.Id)
+                from user        in _userManager.GetCurrentUser(this.User)  
+                from gloomClass  in GetGloomClass(newCharacter.ClassName)
+                from newChar     in ToNewCharacter(user.Id, newCharacter.Name, gloomClass.ClassName)
+                from characterId in AddCharacter(newChar)
+                from character   in GetCharacterViewModel(characterId, user.Id)
                 select character;
 
             return result
@@ -46,7 +46,7 @@ namespace GloomChars.Api.Characters
                     );
         }
 
-        [HttpPost("")]
+        [HttpPost("{characterId}")]
         [Authorize]
         public IActionResult UpdateCharacter([FromQuery] int characterId, [FromBody] CharacterUpdateRequest characterUpdate)
         {
@@ -63,6 +63,24 @@ namespace GloomChars.Api.Characters
                     );
         }
         
+        [HttpPatch("{characterId}")]
+        [Authorize]
+        public IActionResult PatchCharacter([FromQuery] int characterId, [FromBody] CharacterPatchRequest characterPatch)
+        {
+            var result =
+                from user         in _userManager.GetCurrentUser(this.User) 
+                from character    in GetCharacter(characterId, user.Id) 
+                from udpate       in MapPatchToUpdate(characterPatch, character)
+                from updateResult in UpdateCharacter(udpate)
+                select updateResult;
+
+            return result
+                    .Unify<int, IApiError, ActionResult>(
+                        x => NoContent(),  
+                        e => e.ToActionResult()
+                    );
+        }
+
         private Either<GloomClass, IApiError> GetGloomClass(string className)
         {
             return _gameSvc.GetGloomClass(className)
@@ -85,11 +103,16 @@ namespace GloomChars.Api.Characters
                                 .MapError(e => (IApiError)new BadRequestError(e));
         }
 
-        private Either<CharacterViewModel, IApiError> GetCharacter(int characterId, int userId)
+        private Either<Character, IApiError> GetCharacter(int characterId, int userId)
         {
             return _characterSvc.GetCharacter(characterId, userId)
-                                .AsEither<Character, IApiError>(new NotFoundError())
-                                .Map(c => new CharacterViewModel(c));
+                                .AsEither<Character, IApiError>(new NotFoundError());
+        }
+
+        private Either<CharacterViewModel, IApiError> GetCharacterViewModel(int characterId, int userId)
+        {
+            return GetCharacter(characterId, userId)
+                    .Map(c => new CharacterViewModel(c));
         }
 
         private string ToCharacterUri(int characterId)
@@ -116,5 +139,30 @@ namespace GloomChars.Api.Characters
             return _characterSvc.UpdateCharacter(update)
                                 .MapError(e => (IApiError)new BadRequestError(e));
         }
+
+        private Either<CharacterUpdate, IApiError> MapPatchToUpdate(CharacterPatchRequest patch, Character character)
+        {
+            var name = String.IsNullOrEmpty(patch.Name) ? character.Name : patch.Name;
+            var experience = patch.Experience.HasValue ? patch.Experience.Value : character.Experience;
+            var gold = patch.Gold.HasValue ? patch.Gold.Value : character.Gold;
+            var achievements = patch.Achievements.HasValue ? patch.Achievements.Value : character.Achievements;
+
+            var perks = character.Perks;
+            if (patch.Perks != null)
+            {
+                perks = patch.Perks.Select(p => new PerkUpdate { Id = p.Id, Quantity = p.Quantity }).ToList();
+            }
+
+            return new CharacterUpdate
+            {
+                Id = character.Id,
+                UserId = character.UserId,
+                Name = name,
+                Experience = experience,
+                Gold = gold,
+                Achievements = achievements,
+                Perks = perks
+            };
+        }       
     }
 }

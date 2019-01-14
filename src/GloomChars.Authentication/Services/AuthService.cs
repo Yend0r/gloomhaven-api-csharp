@@ -13,6 +13,9 @@ namespace GloomChars.Authentication.Services
         readonly IAuthRepository _authRepo;
         readonly AuthConfig _authConfig;
         readonly string _invalidCredentialsMsg = "Invalid email/password.";
+        readonly string _invalidTokenMsg = "Invalid access token.";
+        readonly string _invalidPasswordMsg = "Invalid password.";
+        readonly string _pwdUpdateFailedMsg = "Password update failed";
 
         public AuthService(IOptions<AuthConfig> authConfig, IAuthRepository authRepo)
         {
@@ -24,7 +27,7 @@ namespace GloomChars.Authentication.Services
         {
             return
                 from preAuthUser  in GetUserForAuth(email)
-                from pwCheck      in CheckPassword(password, preAuthUser)
+                from pwdCheck     in CheckPassword(password, preAuthUser)
                 from lockoutCheck in CheckIfLockedOut(preAuthUser)
                 from newLogin     in CreateNewLogin(preAuthUser)
                 from authUser     in GetAuthenticatedUser(newLogin.AccessToken)
@@ -39,6 +42,16 @@ namespace GloomChars.Authentication.Services
         public int RevokeToken(string accessToken)
         {
             return _authRepo.RevokeToken(accessToken);
+        }
+
+        public Either<int, string> ChangePassword(PasswordUpdate passwordUpdate)
+        {
+            return
+                from preAuthUser in GetUserByAccessToken(passwordUpdate.AccessToken)
+                from oldPwdCheck in CheckOldPassword(passwordUpdate.OldPassword, preAuthUser)
+                from newHashedPassword in PasswordHasher.HashPassword(preAuthUser.Email, passwordUpdate.NewPassword)
+                from updateResult in UpdatePassword(preAuthUser.Id, newHashedPassword)
+                select updateResult;
         }
 
         private void ClearLoginAttempts(int userId)
@@ -125,6 +138,18 @@ namespace GloomChars.Authentication.Services
             return _invalidCredentialsMsg;
         }
 
+        private Either<PreAuthUser, string> CheckOldPassword(string oldPassword, PreAuthUser user)
+        {
+            var passwordVerified = PasswordHasher.VerifyHashedPassword(user.Email, user.PasswordHash, oldPassword);
+
+            if (passwordVerified)
+            {
+                return user;
+            }
+
+            return _invalidPasswordMsg;
+        }
+
         private Either<PreAuthUser, string> GetUserForAuth(string email)
         {
             var user = _authRepo.GetUserForAuth(email);
@@ -137,6 +162,20 @@ namespace GloomChars.Authentication.Services
             return user.AsEither(_invalidCredentialsMsg);
         }
 
+        private Either<PreAuthUser, string> GetUserByAccessToken(string accessToken)
+        {
+            return _authRepo.GetUserByToken(accessToken)
+                            .AsEither(_invalidTokenMsg);
+        }
+
+        private Either<int, string> UpdatePassword(int userId, string passwordHash)
+        {
+            if (_authRepo.UpdatePassword(userId, passwordHash) != 1)
+            {
+                return _pwdUpdateFailedMsg;
+            }
+            return 1;         
+        }
 
         private Either<NewLogin, string> CreateNewLogin(PreAuthUser user)
         {
