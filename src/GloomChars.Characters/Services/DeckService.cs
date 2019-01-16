@@ -57,10 +57,8 @@ namespace GloomChars.Characters.Services
 
                 return new ModifierDeck(totalCards, currentCard, discards);
             }
-            else
-            {
-                return new ModifierDeck(totalCards, discards.First(), discards.Skip(1).ToList());
-            }
+            
+            return new ModifierDeck(totalCards, discards.First(), discards.Skip(1).ToList());
         }
 
         public ModifierDeck Reshuffle(Character character)

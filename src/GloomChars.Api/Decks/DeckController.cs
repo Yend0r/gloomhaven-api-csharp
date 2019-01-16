@@ -51,10 +51,10 @@ namespace GloomChars.Api.Decks
                         .Unify<DeckViewModel, IApiError, ActionResult<DeckViewModel>>(
                             x => x, 
                             e => e.ToActionResult()
-                        );
-                
+                        ); 
             }
-            else if (deckActionRequest.Action.ToUpper() == "RESHUFFLE")
+            
+            if (deckActionRequest.Action.ToUpper() == "RESHUFFLE")
             {
                 //Reshuffle
                 return GetCharacter(characterId)

@@ -7,7 +7,7 @@ using Npgsql;
 
 namespace GloomChars.Common
 {
-    public class DapperUtils
+    public static class DapperUtils
     {
         public static bool IsUniqueError(Exception ex)
         {

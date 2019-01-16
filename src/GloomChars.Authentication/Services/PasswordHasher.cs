@@ -7,7 +7,7 @@ namespace GloomChars.Authentication.Services
 {
     //Letting password hashing exceptions go to the global error handler 
 
-    public class PasswordHasher
+    public static class PasswordHasher
     {
         public static Either<string, string> HashPassword(string email, string password)
         {
