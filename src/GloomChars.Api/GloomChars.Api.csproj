@@ -16,6 +16,7 @@
     <Folder Include="Authentication\" />
     <Folder Include="Errors\" />
     <Folder Include="Characters\" />
+    <Folder Include="Decks\" />
   </ItemGroup>
 
   <ItemGroup>

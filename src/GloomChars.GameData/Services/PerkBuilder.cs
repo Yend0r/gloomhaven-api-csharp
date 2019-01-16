@@ -18,7 +18,7 @@ namespace GloomChars.GameData.Models
             return new PerkBuilder(id, qty);
         }
 
-        public PerkBuilder AddCard(int numCards, CardAction cardAction, int actionAmnt, int dmg, bool draw)
+        public PerkBuilder AddCard(int numCards, CardAction cardAction, int? actionAmnt, int dmg, bool draw)
         {
             var card = new ModifierCard(dmg, cardAction, actionAmnt, draw, false);
             var perkAction = new AddCard { NumCards = numCards, Card = card };
@@ -28,9 +28,9 @@ namespace GloomChars.GameData.Models
         }
 
         public PerkBuilder AddCard(int numCards, CardAction cardAction, int dmg, bool draw) =>
-            this.AddCard(numCards, cardAction, 0, dmg, draw);
+            this.AddCard(numCards, cardAction, null, dmg, draw);
 
-        public PerkBuilder RemoveCard(int numCards, CardAction cardAction, int actionAmnt, int dmg, bool draw)
+        public PerkBuilder RemoveCard(int numCards, CardAction cardAction, int? actionAmnt, int dmg, bool draw)
         {
             var card = new ModifierCard(dmg, cardAction, actionAmnt, draw, false);
             var perkAction = new RemoveCard { NumCards = numCards, Card = card };
@@ -40,7 +40,7 @@ namespace GloomChars.GameData.Models
         }
 
         public PerkBuilder RemoveCard(int numCards, CardAction cardAction, int dmg, bool draw) =>
-            this.RemoveCard(numCards, cardAction, 0, dmg, draw);
+            this.RemoveCard(numCards, cardAction, null, dmg, draw);
 
         public PerkBuilder IgnoreItems()
         {

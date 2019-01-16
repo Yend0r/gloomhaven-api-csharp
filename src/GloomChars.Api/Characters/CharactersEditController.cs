@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -48,7 +49,7 @@ namespace GloomChars.Api.Characters
 
         [HttpPost("{characterId}")]
         [Authorize]
-        public IActionResult UpdateCharacter([FromQuery] int characterId, [FromBody] CharacterUpdateRequest characterUpdate)
+        public IActionResult UpdateCharacter(int characterId, [FromBody] CharacterUpdateRequest characterUpdate)
         {
             var result =
                 from user         in _userManager.GetCurrentUser(this.User)  
@@ -65,7 +66,7 @@ namespace GloomChars.Api.Characters
         
         [HttpPatch("{characterId}")]
         [Authorize]
-        public IActionResult PatchCharacter([FromQuery] int characterId, [FromBody] CharacterPatchRequest characterPatch)
+        public IActionResult PatchCharacter(int characterId, [FromBody] CharacterPatchRequest characterPatch)
         {
             var result =
                 from user         in _userManager.GetCurrentUser(this.User) 
@@ -147,10 +148,14 @@ namespace GloomChars.Api.Characters
             var gold = patch.Gold.HasValue ? patch.Gold.Value : character.Gold;
             var achievements = patch.Achievements.HasValue ? patch.Achievements.Value : character.Achievements;
 
-            var perks = character.Perks;
+            var perks = new List<PerkUpdate>();
             if (patch.Perks != null)
             {
                 perks = patch.Perks.Select(p => new PerkUpdate { Id = p.Id, Quantity = p.Quantity }).ToList();
+            }
+            else
+            {
+                perks = character.Perks.Select(p => new PerkUpdate { Id = p.Id, Quantity = p.Quantity }).ToList();
             }
 
             return new CharacterUpdate

@@ -33,14 +33,14 @@ namespace GloomChars.Characters.Repositories
                     date_created,
                     date_updated)
                 VALUES 
-                    (@user_id, 
+                    (@userId, 
                     @name, 
-                    @class_name, 
+                    @className, 
                     0, 
                     0, 
                     0,
-                    @date_created,
-                    @date_updated)
+                    @dateCreated,
+                    @dateUpdated)
                 RETURNING id
                 ";
             
@@ -56,9 +56,9 @@ namespace GloomChars.Characters.Repositories
                     experience   = @experience, 
                     gold         = @gold, 
                     achievements = @achievements, 
-                    date_updated = @date_updated
+                    date_updated = @dateUpdated
                 WHERE id = @id 
-                    AND user_id = @user_id
+                    AND user_id = @userId
                 ";
             
             var param = new DbCharacterUpdate(characterUpdate);
@@ -76,11 +76,11 @@ namespace GloomChars.Characters.Repositories
         {
             string sql = @"
                 DELETE FROM characters
-                WHERE user_id = @user_id
-                    AND id = @character_id;
+                WHERE user_id = @userId
+                    AND id = @characterId;
     
                 DELETE FROM character_perks
-                WHERE character_id = @character_id;
+                WHERE character_id = @characterId;
                 ";
             
             var param = new { CharacterId = characterId, UserId = userId };
@@ -99,7 +99,7 @@ namespace GloomChars.Characters.Repositories
                 INSERT INTO character_perks
                     (character_id, perk_id, quantity)
                 VALUES 
-                    (@character_id, @perk_id, @quantity)
+                    (@characterId, @perkId, @quantity)
                 ";
             
             var param = perks

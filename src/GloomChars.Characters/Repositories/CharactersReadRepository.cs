@@ -36,7 +36,7 @@ namespace GloomChars.Characters.Repositories
                     achievements AS Achievements
                 FROM characters
                 WHERE id = @id
-                    AND user_id = @user_id;
+                    AND user_id = @userId;
     
                 SELECT perk_id AS PerkId,
                     quantity   AS Quantity
@@ -82,7 +82,7 @@ namespace GloomChars.Characters.Repositories
                     experience   AS Experience,
                     gold         AS Gold
                 FROM characters
-                WHERE user_id = @user_id
+                WHERE user_id = @userId
                 ORDER BY name 
                 ";
             

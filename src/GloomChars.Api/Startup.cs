@@ -46,6 +46,8 @@ namespace GloomChars.Api
             services.AddTransient<ICharactersEditRepository, CharactersEditRepository>();
             services.AddTransient<ICharactersReadRepository, CharactersReadRepository>();
             services.AddTransient<ICharactersService, CharactersService>();
+            services.AddTransient<IDeckRepository, DeckRepository>();
+            services.AddTransient<IDeckService, DeckService>();
 
             services.AddAuthentication(BearerTokenDefaults.AuthenticationOptions)
                     .AddBearerToken();

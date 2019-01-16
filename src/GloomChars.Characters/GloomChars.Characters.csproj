@@ -27,5 +27,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Interfaces\ICharactersEditService.cs" />
+    <Compile Remove="Models\ModifierCard.cs" />
   </ItemGroup>
 </Project>
