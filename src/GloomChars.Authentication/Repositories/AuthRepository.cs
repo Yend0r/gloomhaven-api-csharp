@@ -22,6 +22,7 @@ namespace GloomChars.Authentication.Repositories
             string sql = @"
                 SELECT users.id           AS Id,
                     users.email           AS Email, 
+                    users.name            AS Name, 
                     tokens.access_token   AS AccessToken, 
                     tokens.date_expires   AS AccessTokenExpiresAt,
                     users.is_system_admin AS IsSystemAdmin
