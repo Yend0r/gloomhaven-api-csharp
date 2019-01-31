@@ -54,7 +54,7 @@ namespace GloomChars.Authentication.Services
                 select updateResult;
         }
 
-        private void ClearLoginAttempts(int userId)
+        internal void ClearLoginAttempts(int userId)
         {
             var status = new LoginStatusUpdate
             {
@@ -66,7 +66,7 @@ namespace GloomChars.Authentication.Services
             _authRepo.UpdateLoginStatus(status);
         }
 
-        private void LogFailedAttempt(PreAuthUser user)
+        internal void LogFailedAttempt(PreAuthUser user)
         {
             if (!_authConfig.UseLockout)
             {
@@ -96,7 +96,7 @@ namespace GloomChars.Authentication.Services
             }
         }
 
-        private bool IsLockoutStillValid(DateTime? dateLockedOut)
+        internal bool IsLockoutStillValid(DateTime? dateLockedOut)
         {
             if (dateLockedOut == null)
             {
@@ -107,7 +107,7 @@ namespace GloomChars.Authentication.Services
             return dateLockedOut.Value.AddMinutes(_authConfig.LockoutDurationInMins) <= DateTime.UtcNow;
         }
 
-        private Either<PreAuthUser, string> CheckIfLockedOut(PreAuthUser user)
+        internal Either<PreAuthUser, string> CheckIfLockedOut(PreAuthUser user)
         {
             if (!_authConfig.UseLockout)
             {
@@ -123,7 +123,7 @@ namespace GloomChars.Authentication.Services
             return user;
         }
 
-        private Either<PreAuthUser, string> CheckPassword(string password, PreAuthUser user)
+        internal Either<PreAuthUser, string> CheckPassword(string password, PreAuthUser user)
         {
             //If we got a user then always do the password check to hamper time based attacks
             var passwordVerified = PasswordHasher.VerifyHashedPassword(user.Email, user.PasswordHash, password);
@@ -138,7 +138,7 @@ namespace GloomChars.Authentication.Services
             return _invalidCredentialsMsg;
         }
 
-        private Either<PreAuthUser, string> CheckOldPassword(string oldPassword, PreAuthUser user)
+        internal Either<PreAuthUser, string> CheckOldPassword(string oldPassword, PreAuthUser user)
         {
             var passwordVerified = PasswordHasher.VerifyHashedPassword(user.Email, user.PasswordHash, oldPassword);
 
@@ -150,7 +150,7 @@ namespace GloomChars.Authentication.Services
             return _invalidPasswordMsg;
         }
 
-        private Either<PreAuthUser, string> GetUserForAuth(string email)
+        internal Either<PreAuthUser, string> GetUserForAuth(string email)
         {
             var user = _authRepo.GetUserForAuth(email);
             if (!user.IsSome)
@@ -162,13 +162,13 @@ namespace GloomChars.Authentication.Services
             return user.AsEither(_invalidCredentialsMsg);
         }
 
-        private Either<PreAuthUser, string> GetUserByAccessToken(string accessToken)
+        internal Either<PreAuthUser, string> GetUserByAccessToken(string accessToken)
         {
             return _authRepo.GetUserByToken(accessToken)
                             .AsEither(_invalidTokenMsg);
         }
 
-        private Either<int, string> UpdatePassword(int userId, string passwordHash)
+        internal Either<int, string> UpdatePassword(int userId, string passwordHash)
         {
             if (_authRepo.UpdatePassword(userId, passwordHash) != 1)
             {
@@ -177,7 +177,7 @@ namespace GloomChars.Authentication.Services
             return 1;         
         }
 
-        private Either<NewLogin, string> CreateNewLogin(PreAuthUser user)
+        internal Either<NewLogin, string> CreateNewLogin(PreAuthUser user)
         {
             var newLogin = new NewLogin
             {
