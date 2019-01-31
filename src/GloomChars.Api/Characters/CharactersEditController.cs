@@ -113,7 +113,7 @@ namespace GloomChars.Api.Characters
         private Either<CharacterViewModel, IApiError> GetCharacterViewModel(int characterId, int userId)
         {
             return GetCharacter(characterId, userId)
-                    .Map(c => new CharacterViewModel(c));
+                    .Map(ToCharacterViewModel);
         }
 
         private string ToCharacterUri(int characterId)
@@ -155,7 +155,7 @@ namespace GloomChars.Api.Characters
             }
             else
             {
-                perks = character.Perks.Select(p => new PerkUpdate { Id = p.Id, Quantity = p.Quantity }).ToList();
+                perks = character.ClaimedPerks.Select(p => new PerkUpdate { Id = p.Id, Quantity = p.Quantity }).ToList();
             }
 
             return new CharacterUpdate
@@ -168,6 +168,16 @@ namespace GloomChars.Api.Characters
                 Achievements = achievements,
                 Perks = perks
             };
+        }
+
+        private CharacterViewModel ToCharacterViewModel(Character c)
+        {
+            var gloomClass = _gameSvc.GetGloomClass(c.ClassName);
+            var level = _gameSvc.GetCharacterLevel(c.Experience);
+            var hp = _gameSvc.GetCharacterHP(gloomClass, c.Experience);
+            var petHP = _gameSvc.GetCharacterPetHP(gloomClass, c.Experience);
+
+            return new CharacterViewModel(level, hp, petHP, c);
         }       
     }
 }

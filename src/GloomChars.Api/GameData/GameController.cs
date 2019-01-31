@@ -23,7 +23,7 @@ namespace GloomChars.Api.GameData
         [Authorize]
         public ActionResult<IEnumerable<GloomClassViewModel>> ListClasses()
         {
-            return Ok(_gameSvc.GloomClasses().Select(c => new GloomClassViewModel(c)));
+            return Ok(_gameSvc.GloomClasses().Select(c => new GloomClassViewModel(_gameSvc.XPLevels, c)));
         }
 
         [HttpGet("classes/{name}")]
@@ -33,7 +33,7 @@ namespace GloomChars.Api.GameData
         public IActionResult GetClass(string name)
         {
             return _gameSvc.GetGloomClass(name).AsEither("Class not found.")
-                   .Map(c => new GloomClassViewModel(c))
+                   .Map(c => new GloomClassViewModel(_gameSvc.XPLevels, c))
                    .Unify<GloomClassViewModel, string, IActionResult>(Ok, NotFound);
         }
     }

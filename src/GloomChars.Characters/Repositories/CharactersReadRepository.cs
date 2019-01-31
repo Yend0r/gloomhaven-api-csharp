@@ -62,10 +62,10 @@ namespace GloomChars.Characters.Repositories
 
                 //Map the perks
                 var allPerks = _gameData.GetGloomClass(character.ClassName).Perks;
-                character.Perks = dbPerks.Select(p => ToPerk(allPerks, p))
-                                        .Where(p => p.IsSome)
-                                        .Select(p => p.ForceValue())
-                                        .ToList();
+                character.ClaimedPerks = dbPerks.Select(p => ToPerk(allPerks, p))
+                                                .Where(p => p.IsSome)
+                                                .Select(p => p.ForceValue())
+                                                .ToList();
 
                 return character;
             }

@@ -12,14 +12,16 @@ namespace GloomChars.Api.Characters
         public string Name { get; set; }
         public string ClassName { get; set; }
         public int Experience { get; set; }
+        public int Level { get; set; }
         public int Gold { get; set; }
     
-        public CharacterListModel(CharacterListItem character)
+        public CharacterListModel(int level, CharacterListItem character)
         {
             Id           = character.Id;
             Name         = character.Name;
             ClassName    = character.ClassName.ToString();
             Experience   = character.Experience;
+            Level        = level;
             Gold         = character.Gold;
         }
     }

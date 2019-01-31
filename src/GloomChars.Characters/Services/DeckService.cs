@@ -23,7 +23,7 @@ namespace GloomChars.Characters.Services
         {
             List<ModifierCard> discards = _deckRepo.GetDiscards(character.Id);
 
-            List<ModifierCard> fullDeck = GetFullDeck(character.Perks);
+            List<ModifierCard> fullDeck = GetFullDeck(character.ClaimedPerks);
 
             if (discards.Any())
             {
@@ -37,7 +37,7 @@ namespace GloomChars.Characters.Services
         {
             List<ModifierCard> discards = _deckRepo.GetDiscards(character.Id);
 
-            List<ModifierCard> fullDeck = GetFullDeck(character.Perks);
+            List<ModifierCard> fullDeck = GetFullDeck(character.ClaimedPerks);
             var totalCards = fullDeck.Count;
 
             //Remove discards
@@ -64,7 +64,7 @@ namespace GloomChars.Characters.Services
         public ModifierDeck Reshuffle(Character character)
         {
             _deckRepo.DeleteDiscards(character.Id);
-            List<ModifierCard> fullDeck = GetFullDeck(character.Perks);
+            List<ModifierCard> fullDeck = GetFullDeck(character.ClaimedPerks);
             return new ModifierDeck(fullDeck.Count);
         }
 

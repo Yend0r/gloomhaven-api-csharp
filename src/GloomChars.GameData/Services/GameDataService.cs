@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Bearded.Monads;
 using GloomChars.GameData.Interfaces;
 using GloomChars.GameData.Models;
@@ -8,6 +9,41 @@ namespace GloomChars.GameData.Services
 {
     public class GameDataService : IGameDataService
     {
+        public List<int> XPLevels
+        {
+            get => new List<int> { 0, 45, 95, 150, 210, 275, 345, 420, 500 };
+        }
+
+        public int GetCharacterLevel(int xp)
+        {
+            int level = 0;
+            foreach (int xpLevel in this.XPLevels)
+            {
+                if (xp < xpLevel)
+                {
+                    break;
+                }
+                level++;
+            }
+            return level;
+        }
+
+        public int GetCharacterHP(GloomClass gloomClass, int xp)
+        {
+            var level = GetCharacterLevel(xp);
+            return gloomClass.HPLevels[level - 1];
+        }
+
+        public int? GetCharacterPetHP(GloomClass gloomClass, int xp)
+        {
+            var level = GetCharacterLevel(xp);
+            if (gloomClass.PetHPLevels.Any())
+            {
+                return gloomClass.PetHPLevels[level - 1];
+            }
+            return null;
+        }
+
         public GloomClass GetGloomClass(GloomClassName name)
         {
             return GloomClasses().Find(c => c.ClassName == name);
@@ -50,7 +86,7 @@ namespace GloomChars.GameData.Services
         {
             var gClass = 
                 GloomClass.Create(GloomClassName.Brute, "Inox Brute", "Horns", true) 
-                        
+                        .WithHP(new List<int> {10, 12, 14, 16, 18, 20, 22, 24, 26})
                         .WithPerk(PerkBuilder.Create("brt01", 1).RemoveCard(2, CardAction.Damage, -1, false).Build())
                         .WithPerk(PerkBuilder.Create("brt02", 1).RemoveCard(1, CardAction.Damage, -1, false).AddCard(1, CardAction.Damage, 1, false).Build())
                         .WithPerk(PerkBuilder.Create("brt03", 2).AddCard(2, CardAction.Damage, 1, false).Build())
@@ -69,8 +105,8 @@ namespace GloomChars.GameData.Services
         private GloomClass Tinkerer()
         {
             var gClass = 
-                GloomClass.Create(GloomClassName.Tinkerer, "Quatryl Tinkerer", "Cog", true) 
-                        
+                GloomClass.Create(GloomClassName.Tinkerer, "Quatryl Tinkerer", "Cog", true)                          
+                        .WithHP(new List<int> {8, 9, 11, 12, 14, 15, 17, 18, 20})
                         .WithPerk(PerkBuilder.Create("tnk01", 2).RemoveCard(2, CardAction.Damage, -1, false).Build())
                         .WithPerk(PerkBuilder.Create("tnk02", 1).RemoveCard(1, CardAction.Damage, -2, false).AddCard(1, CardAction.Damage, 0, false).Build())
                         .WithPerk(PerkBuilder.Create("tnk03", 1).AddCard(2, CardAction.Damage, 1, false).Build())
@@ -90,7 +126,7 @@ namespace GloomChars.GameData.Services
         {
             var gClass = 
                 GloomClass.Create(GloomClassName.Spellweaver, "Orchid Spellweaver", "Spell", true) 
-                        
+                        .WithHP(new List<int> {6, 7, 8, 9, 10, 11, 12, 13, 14})
                         .WithPerk(PerkBuilder.Create("spl01", 1).RemoveCard(4, CardAction.Damage, 0, false).Build())
                         .WithPerk(PerkBuilder.Create("spl02", 2).RemoveCard(1, CardAction.Damage, -1, false).AddCard(1, CardAction.Damage, 1, false).Build())
                         .WithPerk(PerkBuilder.Create("spl03", 2).AddCard(2, CardAction.Damage, 1, false).Build())
@@ -110,7 +146,7 @@ namespace GloomChars.GameData.Services
         {
             var gClass = 
                 GloomClass.Create(GloomClassName.Scoundrel, "Human Scoundrel", "ThrowingKnives", true) 
-                        
+                        .WithHP(new List<int> {8, 9, 11, 12, 14, 15, 17, 18, 20})
                         .WithPerk(PerkBuilder.Create("scn01", 2).RemoveCard(2, CardAction.Damage, -1, false).Build())
                         .WithPerk(PerkBuilder.Create("scn02", 1).RemoveCard(4, CardAction.Damage, 0, false).Build())
                         .WithPerk(PerkBuilder.Create("scn03", 1).RemoveCard(1, CardAction.Damage, -2, false).AddCard(1, CardAction.Damage, 0, false).Build())
@@ -129,7 +165,8 @@ namespace GloomChars.GameData.Services
         private GloomClass Cragheart()
         {
             var gClass = 
-                GloomClass.Create(GloomClassName.Cragheart, "Savvas Cragheart", "Rocks", true)                   
+                GloomClass.Create(GloomClassName.Cragheart, "Savvas Cragheart", "Rocks", true)  
+                        .WithHP(new List<int> {10, 12, 14, 16, 18, 20, 22, 24, 26})                 
                         .WithPerk(PerkBuilder.Create("crg01", 1).RemoveCard(4, CardAction.Damage, 0, false).Build())
                         .WithPerk(PerkBuilder.Create("crg02", 3)
                                     .RemoveCard(1, CardAction.Damage, -1, false)
@@ -150,7 +187,7 @@ namespace GloomChars.GameData.Services
         {
             var gClass = 
                 GloomClass.Create(GloomClassName.Mindthief, "Vermling Mindthief", "Brain", true) 
-                        
+                        .WithHP(new List<int> {6, 7, 8, 9, 10, 11, 12, 13, 14})
                         .WithPerk(PerkBuilder.Create("mnd01", 2).RemoveCard(2, CardAction.Damage, -1, false).Build())
                         .WithPerk(PerkBuilder.Create("mnd02", 1).RemoveCard(4, CardAction.Damage, 0, false).Build())
                         .WithPerk(PerkBuilder.Create("mnd03", 1).RemoveCard(2, CardAction.Damage, 1, false).AddCard(2, CardAction.Damage, 2, false).Build())
@@ -171,7 +208,7 @@ namespace GloomChars.GameData.Services
         {
             var gClass = 
                 GloomClass.Create(GloomClassName.Sunkeeper, "Valrath Sunkeeper", "Sun", false) 
-                        
+                        .WithHP(new List<int> {10, 12, 14, 16, 18, 20, 22, 24, 26})
                         .WithPerk(PerkBuilder.Create("sun01", 2).RemoveCard(2, CardAction.Damage, -1, false).Build())
                         .WithPerk(PerkBuilder.Create("sun02", 1).RemoveCard(4, CardAction.Damage, 0, false).Build())
                         .WithPerk(PerkBuilder.Create("sun03", 1).RemoveCard(1, CardAction.Damage, -2, false).AddCard(1, CardAction.Damage, 0, false).Build())
@@ -191,7 +228,7 @@ namespace GloomChars.GameData.Services
         {
             var gClass = 
                 GloomClass.Create(GloomClassName.Quartermaster, "Valrath Quartermaster", "TripleArrow", false) 
-                        
+                        .WithHP(new List<int> {10, 12, 14, 16, 18, 20, 22, 24, 26})
                         .WithPerk(PerkBuilder.Create("qrt01", 2).RemoveCard(2, CardAction.Damage, -1, false).Build())
                         .WithPerk(PerkBuilder.Create("qrt02", 1).RemoveCard(4, CardAction.Damage, 0, false).Build())
                         .WithPerk(PerkBuilder.Create("qrt03", 2).RemoveCard(1, CardAction.Damage, 0, false).AddCard(1, CardAction.Damage, 2, false).Build())
@@ -210,7 +247,7 @@ namespace GloomChars.GameData.Services
         {
             var gClass = 
                 GloomClass.Create(GloomClassName.Summoner, "Aesther Summoner", "Circles", false) 
-                        
+                        .WithHP(new List<int> {8, 9, 11, 12, 14, 15, 17, 18, 20})
                         .WithPerk(PerkBuilder.Create("sum01", 1).RemoveCard(2, CardAction.Damage, -1, false).Build())
                         .WithPerk(PerkBuilder.Create("sum02", 1).RemoveCard(1, CardAction.Damage, -2, false).AddCard(1, CardAction.Damage, 0, false).Build())
                         .WithPerk(PerkBuilder.Create("sum03", 3).RemoveCard(1, CardAction.Damage, -1, false).AddCard(1, CardAction.Damage, 1, false).Build())
@@ -229,7 +266,7 @@ namespace GloomChars.GameData.Services
         {
             var gClass = 
                 GloomClass.Create(GloomClassName.Nightshroud, "Aesther Nightshroud", "Eclipse", false) 
-                        
+                        .WithHP(new List<int> {8, 9, 11, 12, 14, 15, 17, 18, 20})
                         .WithPerk(PerkBuilder.Create("ngt01", 2).RemoveCard(2, CardAction.Damage, -1, false).Build())
                         .WithPerk(PerkBuilder.Create("ngt02", 1).RemoveCard(4, CardAction.Damage, 0, false).Build())
                         .WithPerk(PerkBuilder.Create("ngt03", 2).AddCard(1, CardAction.Dark, -1, false).Build())
@@ -248,7 +285,7 @@ namespace GloomChars.GameData.Services
         {
             var gClass = 
                 GloomClass.Create(GloomClassName.Plagueherald, "Harrower Plagueherald", "Cthulthu", false) 
-                        
+                        .WithHP(new List<int> {6, 7, 8, 9, 10, 11, 12, 13, 14})
                         .WithPerk(PerkBuilder.Create("plg01", 1).RemoveCard(1, CardAction.Damage, -2, false).AddCard(1, CardAction.Damage, 0, false).Build())
                         .WithPerk(PerkBuilder.Create("plg02", 2).RemoveCard(1, CardAction.Damage, -1, false).AddCard(1, CardAction.Damage, 1, false).Build())
                         .WithPerk(PerkBuilder.Create("plg03", 2).RemoveCard(1, CardAction.Damage, 0, false).AddCard(1, CardAction.Damage, 2, false).Build())
@@ -267,7 +304,7 @@ namespace GloomChars.GameData.Services
         {
             var gClass = 
                 GloomClass.Create(GloomClassName.Berserker, "Inox Berserker", "Lightning", false) 
-                        
+                        .WithHP(new List<int> {10, 12, 14, 16, 18, 20, 22, 24, 26})
                         .WithPerk(PerkBuilder.Create("brs01", 1).RemoveCard(2, CardAction.Damage, -1, false).Build())
                         .WithPerk(PerkBuilder.Create("brs02", 1).RemoveCard(4, CardAction.Damage, 0, false).Build())
                         .WithPerk(PerkBuilder.Create("brs03", 2).RemoveCard(1, CardAction.Damage, -1, false).AddCard(1, CardAction.Damage, 1, false).Build())
@@ -286,7 +323,7 @@ namespace GloomChars.GameData.Services
         {
             var gClass = 
                 GloomClass.Create(GloomClassName.Soothsinger, "Quatryl Soothsinger", "MusicNote", false) 
-                        
+                        .WithHP(new List<int> {6, 7, 8, 9, 10, 11, 12, 13, 14})
                         .WithPerk(PerkBuilder.Create("sth01", 2).RemoveCard(2, CardAction.Damage, -1, false).Build())
                         .WithPerk(PerkBuilder.Create("sth02", 1).RemoveCard(1, CardAction.Damage, -2, false).Build())
                         .WithPerk(PerkBuilder.Create("sth03", 2).RemoveCard(2, CardAction.Damage, 1, false).AddCard(1, CardAction.Damage, 4, false).Build())
@@ -307,7 +344,7 @@ namespace GloomChars.GameData.Services
         {
             var gClass = 
                 GloomClass.Create(GloomClassName.Doomstalker, "Orchid Doomstalker", "Mask", false) 
-                        
+                        .WithHP(new List<int> {8, 9, 11, 12, 14, 15, 17, 18, 20})
                         .WithPerk(PerkBuilder.Create("dms01", 2).RemoveCard(2, CardAction.Damage, -1, false).Build())
                         .WithPerk(PerkBuilder.Create("dms02", 3).RemoveCard(2, CardAction.Damage, 0, false).AddCard(2, CardAction.Damage, 1, false).Build())
                         .WithPerk(PerkBuilder.Create("dms03", 2).AddCard(2, CardAction.Damage, 1, true).Build())
@@ -326,7 +363,7 @@ namespace GloomChars.GameData.Services
         {
             var gClass = 
                 GloomClass.Create(GloomClassName.Sawbones, "Human Sawbones", "Saw", false) 
-                        
+                        .WithHP(new List<int> {8, 9, 11, 12, 14, 15, 17, 18, 20})
                         .WithPerk(PerkBuilder.Create("saw01", 2).RemoveCard(2, CardAction.Damage, -1, false).Build())
                         .WithPerk(PerkBuilder.Create("saw02", 1).RemoveCard(4, CardAction.Damage, 0, false).Build())
                         .WithPerk(PerkBuilder.Create("saw03", 2).RemoveCard(1, CardAction.Damage, 0, false).AddCard(1, CardAction.Damage, 2, false).Build())
@@ -344,7 +381,7 @@ namespace GloomChars.GameData.Services
         {
             var gClass = 
                 GloomClass.Create(GloomClassName.Elementalist, "Savvas Elementalist", "Triangle", false) 
-                        
+                        .WithHP(new List<int> {6, 7, 8, 9, 10, 11, 12, 13, 14})
                         .WithPerk(PerkBuilder.Create("elm01", 2).RemoveCard(2, CardAction.Damage, -1, false).Build())
                         .WithPerk(PerkBuilder.Create("elm02", 1).RemoveCard(1, CardAction.Damage, -1, false).AddCard(1, CardAction.Damage, 1, false).Build())
                         .WithPerk(PerkBuilder.Create("elm03", 2).RemoveCard(1, CardAction.Damage, 0, false).AddCard(1, CardAction.Damage, 2, false).Build())
@@ -366,7 +403,8 @@ namespace GloomChars.GameData.Services
         {
             var gClass = 
                 GloomClass.Create(GloomClassName.BeastTyrant, "Vermling Beast Tyrant", "TwoMinis", false) 
-                        
+                        .WithHP(new List<int> {6, 7, 8, 9, 10, 11, 12, 13, 14})
+                        .WithPetHP(new List<int> {10, 12, 14, 16, 18, 20, 22, 24, 26})
                         .WithPerk(PerkBuilder.Create("bst01", 1).RemoveCard(2, CardAction.Damage, -1, false).Build())
                         .WithPerk(PerkBuilder.Create("bst02", 3).RemoveCard(1, CardAction.Damage, -1, false).AddCard(1, CardAction.Damage, 1, false).Build())
                         .WithPerk(PerkBuilder.Create("bst03", 2).RemoveCard(1, CardAction.Damage, 0, false).AddCard(1, CardAction.Damage, 2, false).Build())

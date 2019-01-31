@@ -8,6 +8,7 @@ using GloomChars.Characters.Interfaces;
 using GloomChars.Api.Authentication;
 using GloomChars.Characters.Models;
 using GloomChars.Api.Errors;
+using GloomChars.GameData.Interfaces;
 
 namespace GloomChars.Api.Characters
 {
@@ -16,11 +17,13 @@ namespace GloomChars.Api.Characters
     public class CharactersReadController : ControllerBase
     {
         readonly ICharactersService _characterSvc;
+        readonly IGameDataService _gameSvc;
         readonly IUserManager _userManager;
 
-        public CharactersReadController(ICharactersService characterSvc, IUserManager userManager)
+        public CharactersReadController(ICharactersService characterSvc, IGameDataService gameSvc, IUserManager userManager)
         {
             _characterSvc = characterSvc;
+            _gameSvc = gameSvc;
             _userManager = userManager;
         }
 
@@ -30,7 +33,7 @@ namespace GloomChars.Api.Characters
         {
             return _userManager.GetCurrentUser(this.User)
                     .Map(u => _characterSvc.GetCharacters(u.Id))
-                    .Map(cList => cList.Select(c => new CharacterListModel(c)).ToList())
+                    .Map(cList => cList.Select(ToCharacterListModel).ToList())
                     .Unify<List<CharacterListModel>, IApiError, ActionResult<List<CharacterListModel>>>(
                         x => x, 
                         e => e.ToActionResult()
@@ -57,7 +60,25 @@ namespace GloomChars.Api.Characters
         {
             return _characterSvc.GetCharacter(characterId, userId)
                                 .AsEither<Character, IApiError>(new NotFoundError())
-                                .Map(c => new CharacterViewModel(c));
+                                .Map(ToCharacterViewModel);
+        }
+
+        private CharacterListModel ToCharacterListModel(CharacterListItem c)
+        {
+            var gloomClass = _gameSvc.GetGloomClass(c.ClassName);
+            var level = _gameSvc.GetCharacterLevel(c.Experience);
+
+            return new CharacterListModel(level, c);
+        }
+
+        private CharacterViewModel ToCharacterViewModel(Character c)
+        {
+            var gloomClass = _gameSvc.GetGloomClass(c.ClassName);
+            var level = _gameSvc.GetCharacterLevel(c.Experience);
+            var hp = _gameSvc.GetCharacterHP(gloomClass, c.Experience);
+            var petHP = _gameSvc.GetCharacterPetHP(gloomClass, c.Experience);
+
+            return new CharacterViewModel(level, hp, petHP, c);
         }
     }
 }
