@@ -16,7 +16,7 @@
     <Folder Include="Authentication\" />
     <Folder Include="Errors\" />
     <Folder Include="Characters\" />
-    <Folder Include="Decks\" />
+    <Folder Include="Scenarios\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,5 +35,6 @@
     <Compile Remove="DatabaseConfig.cs" />
     <Compile Remove="EitherExtensions.cs" />
     <Compile Remove="Controllers\ValuesController.cs" />
+    <Compile Remove="Decks\DeckController.cs" />
   </ItemGroup>
 </Project>

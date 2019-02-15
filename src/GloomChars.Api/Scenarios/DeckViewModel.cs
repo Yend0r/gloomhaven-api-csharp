@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using GloomChars.Characters.Models;
 
-namespace GloomChars.Api.Decks
+namespace GloomChars.Api.Scenarios
 {
     public class DeckViewModel
     {

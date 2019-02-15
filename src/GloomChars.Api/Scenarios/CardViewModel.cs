@@ -1,7 +1,7 @@
 ﻿using System;
 using GloomChars.GameData.Models;
 
-namespace GloomChars.Api.Decks
+namespace GloomChars.Api.Scenarios
 {
     public class CardViewModel
     {

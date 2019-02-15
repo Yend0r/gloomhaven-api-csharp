@@ -59,7 +59,7 @@ namespace GloomChars.Api.Characters
 
             return result
                     .Unify<int, IApiError, ActionResult>(
-                        x => NoContent(),  
+                        _ => NoContent(),  
                         e => e.ToActionResult()
                     );
         }
@@ -77,7 +77,7 @@ namespace GloomChars.Api.Characters
 
             return result
                     .Unify<int, IApiError, ActionResult>(
-                        x => NoContent(),  
+                        _ => NoContent(),  
                         e => e.ToActionResult()
                     );
         }

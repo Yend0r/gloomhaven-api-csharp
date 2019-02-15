@@ -49,11 +49,7 @@ namespace GloomChars.Characters.Repositories
                 DapperUtils.QueryMulti2<Character, DbCharacterPerk>(
                     _connStr, 
                     sql, 
-                    new 
-                    { 
-                        Id = characterId,
-                        UserId = userId
-                    }
+                    new { Id = characterId, UserId = userId }
                 );
 
             if (ch.Any())

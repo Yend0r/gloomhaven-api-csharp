@@ -1,5 +1,5 @@
 ﻿using System;
-namespace GloomChars.Api.Decks
+namespace GloomChars.Api.Scenarios
 {
     public class DeckActionRequest
     {
